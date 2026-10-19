@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wakilarium.zelij.ai/schema/wakil-event-0.1.json",
+  "title": "Wakil Event v0.1",
+  "description": "Un fait daté produit par un agent, un humain, un service ou un visiteur, mis en scène par Wakilarium. Une ligne NDJSON par événement. Les champs title, detail, attrs et cost sont privés ; seul public_title (ou le libellé générique de kind) peut s'afficher sur une vue publique.",
+  "type": "object",
+  "required": ["v", "ts", "kind", "actor", "title"],
+  "additionalProperties": true,
+  "properties": {
+    "v": { "const": "0.1" },
+    "id": { "type": "string", "maxLength": 120 },
+    "ts": { "type": "string", "format": "date-time" },
+    "kind": { "enum": ["run.start", "run.end", "tool", "message", "decision.open", "decision.made", "visitor", "launch", "cost", "note"] },
+    "actor": { "$ref": "#/$defs/actor" },
+    "target": { "$ref": "#/$defs/actor" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 140 },
+    "public_title": { "type": "string", "maxLength": 140 },
+    "detail": { "type": "string", "maxLength": 2000 },
+    "status": { "enum": ["ok", "running", "failed", "approved", "refused", "changes", "pending"] },
+    "cost": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "tokens_in": { "type": "integer", "minimum": 0 },
+        "tokens_out": { "type": "integer", "minimum": 0 },
+        "model": { "type": "string", "maxLength": 120 }
+      },
+      "additionalProperties": false
+    },
+    "run_id": { "type": "string", "maxLength": 120 },
+    "parent_id": { "type": "string", "maxLength": 120 },
+    "source": { "type": "string", "maxLength": 60 },
+    "attrs": { "type": "object" }
+  },
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "name": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "maxLength": 120 },
+        "lane": { "type": "string", "maxLength": 60 },
+        "kind": { "enum": ["agent", "human", "service", "visitor"], "default": "agent" },
+        "avatar": { "type": "string", "format": "uri", "maxLength": 400 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

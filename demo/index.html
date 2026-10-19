@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="fr" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Wakilarium — regardez vos agents travailler</title>
+<meta name="description" content="Wakilarium : un composant web ouvert et un format d'événement pour regarder n'importe quel agent d'IA travailler, en direct et en replay. Maquette du lot 0, dépôt public zelij-ai/wakilarium.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+  :root { color-scheme: dark; --wk-bg: #070a1c; --wk-bg-2: #0d1232; --wk-carte: #10163a; --wk-ink: #f2efe7; --wk-doux: #b9b4a6; --wk-line: rgba(255,255,255,.12); --wk-gold: #ffc43d; --wk-rose: #ff5c9a; --wk-vert: #3ddc97; --wk-violet: #8b7cff; --wk-bleu: #4cc9ff; --wk-r: 18px; --font: "IBM Plex Sans", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+  :root[data-theme="day"] { color-scheme: light; --wk-bg: #f6f2ea; --wk-bg-2: #efe9dc; --wk-carte: #ffffff; --wk-ink: #12151c; --wk-doux: #5c6270; --wk-line: rgba(18,21,28,.12); --wk-gold: #b8700c; --wk-rose: #c2417a; --wk-vert: #1f7a5a; --wk-violet: #5b4bc4; --wk-bleu: #1f6fb2; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(1200px 600px at 70% -10%, color-mix(in srgb, var(--wk-violet) 18%, transparent), transparent 60%), var(--wk-bg); color: var(--wk-ink); font: 16px/1.55 var(--font); }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 100% - 40px); margin: 0 auto; }
+  nav { display: flex; align-items: center; gap: 18px; padding: 18px 0; }
+  .marque { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; text-decoration: none; font-size: 18px; }
+  .marque .anneau { width: 22px; height: 22px; border-radius: 999px; border: 3px solid var(--wk-gold); box-shadow: 0 0 14px color-mix(in srgb, var(--wk-gold) 60%, transparent); }
+  .marque small { font-weight: 500; color: var(--wk-doux); font-size: 12px; margin-left: 4px; }
+  .nav-links { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .nav-links a, .pill-btn { padding: 8px 12px; border-radius: 999px; text-decoration: none; font-size: 14px; color: var(--wk-doux); border: 1px solid transparent; background: transparent; font: inherit; cursor: pointer; min-height: 36px; }
+  .nav-links a:hover, .pill-btn:hover { color: var(--wk-ink); border-color: var(--wk-line); }
+  .pill-btn[aria-pressed="true"] { color: var(--wk-ink); border-color: var(--wk-line); background: color-mix(in srgb, var(--wk-ink) 8%, transparent); }
+  .cta { background: var(--wk-gold); color: #1a1200 !important; font-weight: 700; }
+  .cta:hover { filter: brightness(1.05); }
+  .hero { padding: 36px 0 18px; display: grid; gap: 14px; }
+  .eyebrow { font: 600 11px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--wk-bleu); margin: 0; }
+  h1 { margin: 0; font-size: clamp(36px, 6vw, 68px); line-height: 1.02; letter-spacing: -.03em; max-width: 14ch; font-weight: 700; }
+  h1 em { font-style: normal; color: var(--wk-gold); }
+  .sub { margin: 0; max-width: 64ch; color: var(--wk-doux); font-size: 18px; }
+  .sub b { color: var(--wk-ink); }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 15px; border: 1px solid var(--wk-line); color: var(--wk-ink); background: color-mix(in srgb, var(--wk-ink) 6%, transparent); }
+  .btn.or { background: var(--wk-gold); color: #1a1200; border-color: transparent; }
+  .badge-maquette { position: fixed; top: 10px; right: 10px; z-index: 50; font: 600 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 8px 10px; border-radius: 999px; background: #ef4444; color: #fff; }
+  /* aquarium */
+  .vitre { position: relative; margin-top: 22px; border-radius: 24px; padding: 6px; background: linear-gradient(160deg, #1b2452, #0d1232 38%, #070a1c); box-shadow: 0 1px 0 rgba(255,255,255,.14) inset, 0 34px 70px -28px color-mix(in srgb, var(--wk-bleu) 45%, transparent); }
+  :root[data-theme="day"] .vitre { background: linear-gradient(160deg, #ffffff, #f3eee3 60%, #e9e2d3); box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 30px 60px -30px rgba(18,21,28,.35); }
+  .vitre::before { content: ""; position: absolute; inset: 0; border-radius: 24px; padding: 1px; background: linear-gradient(140deg, var(--wk-bleu), var(--wk-violet) 34%, color-mix(in srgb, var(--wk-rose) 60%, transparent) 66%, var(--wk-gold)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .tete { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px 8px; }
+  .tete .nom { font: 600 11px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--wk-bleu); }
+  .tete .horloge { font: 700 22px/1 var(--mono); font-variant-numeric: tabular-nums; }
+  .tete .etat { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--wk-doux); padding: 5px 8px; border: 1px solid var(--wk-line); border-radius: 999px; }
+  .tete .kpi { font: 600 12px/1 var(--mono); color: var(--wk-doux); }
+  .tete .kpi b { color: var(--wk-gold); font-weight: 700; }
+  .tete .droite { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .tete label { font-size: 12px; color: var(--wk-doux); display: inline-flex; gap: 6px; align-items: center; }
+  .tete select, .tete input[type=range] { accent-color: var(--wk-gold); }
+  .tete select { background: transparent; color: var(--wk-ink); border: 1px solid var(--wk-line); border-radius: 8px; padding: 4px 6px; font: inherit; font-size: 12px; }
+  .tete input[type=range] { width: 140px; }
+  .pause { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--wk-gold) 60%, transparent); background: color-mix(in srgb, var(--wk-gold) 14%, transparent); color: var(--wk-ink); font: 600 13px/1 var(--font); cursor: pointer; }
+  #wakilarium canvas { display: block; width: 100%; height: 560px; border-radius: 18px; background: var(--wk-bg-2); }
+  .legende { margin: 12px 4px 0; color: var(--wk-doux); font-size: 14px; max-width: 80ch; }
+  .legende b { color: var(--wk-ink); }
+  section.bloc { padding: 56px 0 8px; }
+  section.bloc h2 { margin: 0 0 8px; font-size: clamp(24px, 3vw, 34px); letter-spacing: -.02em; }
+  section.bloc .lead { margin: 0 0 24px; color: var(--wk-doux); max-width: 66ch; }
+  .grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .carte { background: var(--wk-carte); border: 1px solid var(--wk-line); border-radius: var(--wk-r); padding: 18px 20px; display: grid; gap: 8px; align-content: start; }
+  .carte .k { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--wk-bleu); }
+  .carte h3 { margin: 0; font-size: 18px; }
+  .carte p { margin: 0; color: var(--wk-doux); font-size: 15px; }
+  pre { margin: 0; padding: 14px 16px; border-radius: 12px; background: #050816; color: #e9e4d6; font: 500 13px/1.5 var(--mono); overflow-x: auto; border: 1px solid var(--wk-line); }
+  :root[data-theme="day"] pre { background: #12151c; }
+  pre .c { color: #7aa2ff; } pre .s { color: #ffd166; } pre .d { color: #94a3b8; }
+  .prevu { display: inline-block; margin-left: 8px; font: 600 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--wk-gold); border: 1px solid color-mix(in srgb, var(--wk-gold) 60%, transparent); border-radius: 999px; padding: 4px 8px; vertical-align: middle; }
+  .deux { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; align-items: start; }
+  .route { display: grid; gap: 10px; }
+  .route li { list-style: none; display: grid; grid-template-columns: 54px 1fr; gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--wk-line); }
+  .route .n { font: 700 12px/1 var(--mono); color: var(--wk-gold); padding-top: 4px; }
+  .route b { display: block; }
+  .route span { color: var(--wk-doux); font-size: 14px; }
+  footer { margin-top: 60px; padding: 24px 0 40px; border-top: 1px solid var(--wk-line); color: var(--wk-doux); font-size: 14px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: space-between; }
+  /* encart étoile (repris de Zelij Core 0.9.1) */
+  .etoile { position: fixed; right: 18px; bottom: 18px; z-index: 30; width: min(300px, calc(100vw - 36px)); padding: 14px 16px; background: var(--wk-carte); color: var(--wk-ink); border: 1px solid var(--wk-line); border-radius: 14px; box-shadow: 0 14px 40px -18px rgba(0,0,0,.6); }
+  .etoile[hidden] { display: none; }
+  .etoile-fermer { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border: 0; border-radius: 999px; background: transparent; color: var(--wk-doux); cursor: pointer; font-size: 16px; }
+  .etoile-titre { margin: 0 26px 4px 0; font-weight: 700; font-size: 16px; }
+  .etoile-texte { margin: 0 0 10px; font-size: 13px; color: var(--wk-doux); }
+  .etoile-bouton { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 10px 6px 12px; border: 1px solid var(--wk-line); border-radius: 9px; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .etoile-compte { padding-left: 8px; border-left: 1px solid var(--wk-line); color: var(--wk-gold); font-family: var(--mono); font-size: 12px; }
+  @media (max-width: 760px) { .deux { grid-template-columns: 1fr; } #wakilarium canvas { height: 540px; } .tete input[type=range] { width: 100px; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<span class="badge-maquette" data-i18n="maquette">Maquette · données fictives</span>
+<div class="wrap">
+<nav>
+  <a class="marque" href="#"><span class="anneau" aria-hidden="true"></span>Wakilarium <small>by zelij.ai</small></a>
+  <div class="nav-links">
+    <a href="#format" data-i18n="nav_format">Le format</a>
+    <a href="#brancher" data-i18n="nav_brancher">Brancher</a>
+    <a href="#donnees" data-i18n="nav_donnees">Vos données</a>
+    <button type="button" class="pill-btn" data-lang="en" aria-pressed="false">EN</button>
+    <button type="button" class="pill-btn" data-theme-toggle aria-pressed="false" data-i18n="jour">☀ Jour</button>
+    <a class="nav-links cta" href="https://github.com/zelij-ai/wakilarium" rel="noopener" data-i18n="nav_depot">GitHub</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <p class="eyebrow" data-i18n="eyebrow">Composant web · format ouvert · Apache 2.0</p>
+  <h1 data-i18n-html="h1">Regardez vos agents <em>travailler.</em></h1>
+  <p class="sub" data-i18n-html="sub">Un aquarium pour <b>n'importe quel agent</b> : Claude Code, OpenTelemetry, AG-UI, Zelij Core, les agents des plateformes. Un événement ouvert, un composant sans dépendance, un collecteur minuscule. <b>Vos données restent chez vous.</b></p>
+  <div class="hero-actions">
+    <a class="btn or" href="#brancher" data-i18n="cta1">Brancher en une ligne</a>
+    <a class="btn" href="#format" data-i18n="cta2">Lire le format</a>
+  </div>
+
+  <div class="vitre" id="wakilarium">
+    <div class="tete">
+      <span class="nom">Wakilarium</span>
+      <span class="horloge" data-wk-clock>09:00</span>
+      <span class="etat" data-wk-state>Replay</span>
+      <span class="kpi"><span data-i18n="kpi_cout">coût du jour</span> <b data-wk-cost>0.00 €</b> · <span data-i18n="kpi_attente">décisions en attente</span> <b data-wk-pending>0</b></span>
+      <div class="droite">
+        <label><input type="checkbox" data-wk-public> <span data-i18n="publique">vue publique</span></label>
+        <label><span data-i18n="vitesse">vitesse</span> <select data-wk-speed><option value="60">×60</option><option value="180" selected>×180</option><option value="600">×600</option></select></label>
+        <input type="range" min="0" max="1000" value="0" data-wk-time aria-label="Ligne de temps">
+        <button type="button" class="pill-btn" data-wk-live data-i18n="direct">Direct</button>
+        <button type="button" class="pause" data-wk-pause aria-pressed="false">❚❚ Pause</button>
+      </div>
+    </div>
+    <canvas role="img" aria-label="Scène Wakilarium : un humain en or, des agents par couloir, un visiteur à l'entrée ; les cartes montrent les échanges, les décisions et les mises en ligne d'une journée simulée."></canvas>
+  </div>
+  <p class="legende" data-i18n-html="legende"><b>Journée simulée.</b> Dans votre installation, chaque carte est un Wakil Event réel, émis par vos propres agents. L'or, c'est l'humain : rien de ce qui engage ne se fait avant sa décision. Le visiteur en pointillé est un agent extérieur, un agent d'achat par exemple, anonyme par défaut. La case « vue publique » montre ce qu'une page partagée afficherait : les titres publics seulement.</p>
+</header>
+
+<section class="bloc" id="brancher">
+  <h2 data-i18n="b_titre">Brancher en une ligne.</h2>
+  <p class="lead" data-i18n="b_lead">Le collecteur reçoit des événements, les range, les sert au composant. Les adaptateurs traduisent ce que vous avez déjà.</p>
+  <div class="grille">
+    <div class="carte"><span class="k">Claude Code · Agent SDK</span><h3 data-i18n="a1">Une ligne dans settings.json</h3><p data-i18n="a1p">Les hooks de session, d'outil et de sous-agent deviennent des Wakil Events. Aucun fichier lu, aucun secret.</p></div>
+    <div class="carte"><span class="k">OpenTelemetry GenAI · OpenInference</span><h3 data-i18n="a2">Un récepteur OTLP</h3><p data-i18n="a2p">LangChain, LlamaIndex, CrewAI, Vercel AI SDK : les spans d'agent, d'outil et de modèle, projetés sans copier les prompts.</p></div>
+    <div class="carte"><span class="k">AG-UI</span><h3 data-i18n="a3">Un consommateur d'événements</h3><p data-i18n="a3p">RUN, TOOL_CALL, TEXT_MESSAGE : le protocole agent → interface, mis en scène.</p></div>
+    <div class="carte"><span class="k">Zelij Core · zelij-os</span><h3 data-i18n="a4">Les deux plateformes d'origine</h3><p data-i18n="a4p">L'aquarium historique bascule sur le composant, sans régression.</p></div>
+    <div class="carte"><span class="k" data-i18n="a5k">Connecteurs Muse · dots</span><h3 data-i18n="a5">Les visiteurs</h3><p data-i18n="a5p">Un agent d'achat qui lit votre catalogue ou demande un devis apparaît à l'entrée, anonyme. Unique sur le marché.</p></div>
+  </div>
+  <div class="deux" style="margin-top:18px">
+    <pre><span class="d"># collecteur</span> <span class="prevu" data-i18n="prevu">prévu au lot 1</span>
+<span class="c">pip</span> install wakilarium
+<span class="c">wakil-collect</span> demo          <span class="d"># une journée fictive, sans clé ni réseau</span>
+<span class="c">wakil-collect</span> serve --port 8787</pre>
+    <pre><span class="d">&lt;!-- composant, dans votre page --&gt;</span>
+&lt;script src=<span class="s">"https://cdn.jsdelivr.net/npm/wakilarium@0.1"</span>&gt;&lt;/script&gt;
+&lt;wakil-arium src=<span class="s">"http://localhost:8787/state"</span> theme=<span class="s">"night"</span>&gt;&lt;/wakil-arium&gt;</pre>
+  </div>
+</section>
+
+<section class="bloc" id="format">
+  <h2 data-i18n="f_titre">Un événement, une ligne.</h2>
+  <p class="lead" data-i18n="f_lead">Le Wakil Event dit qui a fait quoi, quand, vers qui, avec quel coût et quel état. Ce qui est privé le reste : seul le titre public peut sortir.</p>
+  <pre>{"v":"0.1","ts":"2026-10-19T10:05:00+02:00","kind":"decision.open",
+ "actor":{"id":"chef","name":"Camille Aubert","role":"chef de cabinet","lane":"direction"},
+ "target":{"id":"fondateur"},
+ "title":"Publier la page d'offre ? Options, risques et retour arrière dans le paquet.",
+ "public_title":"propose une décision","status":"pending"}</pre>
+  <div class="grille" style="margin-top:14px">
+    <div class="carte"><span class="k">kind</span><p>run.start · run.end · tool · message · decision.open · decision.made · visitor · launch · cost · note</p></div>
+    <div class="carte"><span class="k">actor</span><p>id, name, role, lane, kind (agent · human · service · visitor). <span data-i18n="f_actor">L'humain est dessiné en or.</span></p></div>
+    <div class="carte"><span class="k" data-i18n="f_prive_k">privé</span><p data-i18n="f_prive">title, detail, attrs, cost : jamais sur une vue publique. public_title ou un libellé générique, rien d'autre.</p></div>
+  </div>
+</section>
+
+<section class="bloc" id="donnees">
+  <div class="deux">
+    <div>
+      <h2 data-i18n="d_titre">Vos données restent chez vous.</h2>
+      <p class="lead" data-i18n="d_lead">Le collecteur tourne sur votre machine ou votre serveur. Il ne sort pas sur le réseau, il n'exécute rien : il range et il montre. La page publique est une projection sans détail, que vous ouvrez et coupez d'un clic.</p>
+      <p class="lead" data-i18n="d_lead2">Licence Apache 2.0 : à embarquer dans vos produits, ouverts ou fermés. La marque et la démo hébergée restent à zelij.ai.</p>
+    </div>
+    <div>
+      <h2 data-i18n="r_titre">Feuille de route</h2>
+      <ol class="route">
+        <li><span class="n">lot 0</span><div><b data-i18n="r0">Nom, format v0.1, maquette</b><span data-i18n="r0s">ce que vous regardez</span></div></li>
+        <li><span class="n">lot 1</span><div><b data-i18n="r1">Composant, collecteur, démo, adaptateur Claude Code</b><span data-i18n="r1s">dépôt public zelij-ai/wakilarium</span></div></li>
+        <li><span class="n">lot 2</span><div><b data-i18n="r2">OpenTelemetry, AG-UI, connecteurs, bascule de Zelij Core et zelij-os</b><span data-i18n="r2s">sans régression, sinon pas de bascule</span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Wakilarium · <span data-i18n="pied">les agents proposent, l'humain décide</span></span>
+  <span><a href="https://zelij.ai/" rel="noopener">by zelij.ai</a> · <a href="https://zelij.ai/core/" rel="noopener">Zelij Core</a></span>
+</footer>
+</div>
+
+<aside class="etoile" id="etoile" hidden aria-label="Une étoile pour Wakilarium">
+  <button type="button" class="etoile-fermer" data-etoile-fermer aria-label="Fermer">×</button>
+  <p class="etoile-titre" data-i18n="e_titre">Une étoile pour Wakilarium</p>
+  <p class="etoile-texte" data-i18n="e_texte">Suivez les versions et aidez le format à devenir un standard.</p>
+  <a class="etoile-bouton" href="https://github.com/zelij-ai/wakilarium" rel="noopener"><span>★</span><span>zelij-ai/wakilarium</span><span class="etoile-compte" data-i18n="e_bientot">bientôt</span></a>
+</aside>
+
+<script id="wakil-events" type="application/x-ndjson">
+{"v":"0.1","ts":"2026-10-19T09:02:00+02:00","kind":"message","actor":{"id":"fondateur","name":"Vous","kind":"human","lane":"direction"},"target":{"id":"chef","name":"Camille Aubert","role":"chef de cabinet","lane":"direction"},"title":"Il nous faut une page d'offre pour le salon de novembre.","public_title":"une demande au bureau"}
+{"v":"0.1","ts":"2026-10-19T09:03:00+02:00","kind":"message","actor":{"id":"chef","name":"Camille Aubert","role":"chef de cabinet","lane":"direction"},"target":{"id":"croissance","name":"Élise Tanguy","role":"marketing","lane":"marketing"},"title":"Élise, une page d'offre pour le salon : faits datés, sources citées.","public_title":"confie une tâche"}
+{"v":"0.1","ts":"2026-10-19T09:04:00+02:00","kind":"run.start","actor":{"id":"croissance","name":"Élise Tanguy","role":"marketing","lane":"marketing"},"title":"Rédaction de la page d'offre","run_id":"r-1","source":"zelij-core"}
+{"v":"0.1","ts":"2026-10-19T09:12:00+02:00","kind":"tool","actor":{"id":"croissance"},"title":"lire_page : tarifs du salon","public_title":"utilise un outil","status":"ok","run_id":"r-1"}
+{"v":"0.1","ts":"2026-10-19T09:41:00+02:00","kind":"run.end","actor":{"id":"croissance"},"status":"ok","title":"Brouillon prêt. Trois faits relevés ce matin, chacun avec sa source.","public_title":"a terminé une tâche","run_id":"r-1","cost":{"amount":0.42,"currency":"EUR","tokens_in":18400,"tokens_out":2200,"model":"claude-sonnet-5-5"}}
+{"v":"0.1","ts":"2026-10-19T10:05:00+02:00","kind":"decision.open","actor":{"id":"chef"},"target":{"id":"fondateur"},"title":"Décision à prendre : publier la page d'offre ? Options, risques et retour arrière sont dans le paquet.","public_title":"propose une décision","status":"pending"}
+{"v":"0.1","ts":"2026-10-19T10:12:00+02:00","kind":"decision.made","actor":{"id":"fondateur","kind":"human"},"target":{"id":"chef"},"status":"approved","title":"Approuvé, avec une consigne : ajouter la date du salon.","public_title":"a décidé"}
+{"v":"0.1","ts":"2026-10-19T10:20:00+02:00","kind":"run.start","actor":{"id":"batisseur","name":"Sacha Ferrand","role":"software factory","lane":"factory"},"title":"Ouverture d'une demande de fusion","run_id":"r-2"}
+{"v":"0.1","ts":"2026-10-19T10:24:00+02:00","kind":"tool","actor":{"id":"batisseur"},"title":"git : branche et demande de fusion","public_title":"utilise un outil","status":"ok","run_id":"r-2"}
+{"v":"0.1","ts":"2026-10-19T10:26:00+02:00","kind":"run.end","actor":{"id":"batisseur"},"status":"ok","title":"Demande de fusion ouverte sur votre dépôt. Rien n'est en ligne sans vous.","public_title":"a préparé une mise en ligne","run_id":"r-2","cost":{"amount":0.11,"currency":"EUR","model":"claude-haiku-5-5"}}
+{"v":"0.1","ts":"2026-10-19T11:30:00+02:00","kind":"message","actor":{"id":"finances","name":"Nour Bellamy","role":"finances et clients","lane":"finances"},"target":{"id":"fondateur"},"title":"Une vente confirmée par le paiement ce matin. Deux relances de contacts à valider.","public_title":"fait le point"}
+{"v":"0.1","ts":"2026-10-19T11:45:00+02:00","kind":"tool","actor":{"id":"finances"},"title":"stripe : lecture des paiements","public_title":"utilise un outil","status":"failed","detail":"délai dépassé, nouvel essai dans 10 min"}
+{"v":"0.1","ts":"2026-10-19T14:15:00+02:00","kind":"decision.open","actor":{"id":"batisseur"},"target":{"id":"fondateur"},"title":"Décision à prendre : mettre en ligne la version du jour ?","public_title":"propose une décision","status":"pending"}
+{"v":"0.1","ts":"2026-10-19T14:22:00+02:00","kind":"decision.made","actor":{"id":"fondateur","kind":"human"},"target":{"id":"batisseur"},"status":"refused","title":"Refusé pour aujourd'hui : je relis d'abord la page.","public_title":"a décidé"}
+{"v":"0.1","ts":"2026-10-19T15:03:00+02:00","kind":"visitor","actor":{"id":"muse-1","name":"agent Muse","kind":"visitor","lane":"entree"},"target":{"id":"finances"},"title":"Lecture du catalogue, demande de devis « refonte de site ».","public_title":"un visiteur consulte le catalogue","source":"connecteur"}
+{"v":"0.1","ts":"2026-10-19T15:04:00+02:00","kind":"decision.open","actor":{"id":"finances"},"target":{"id":"fondateur"},"title":"Un agent extérieur demande un devis : ouvrir le dossier ?","public_title":"propose une décision","status":"pending"}
+{"v":"0.1","ts":"2026-10-19T16:40:00+02:00","kind":"message","actor":{"id":"croissance"},"target":{"id":"chef"},"title":"Relevé des tarifs du salon : inchangés depuis lundi, source vérifiée.","public_title":"transmet un relevé"}
+{"v":"0.1","ts":"2026-10-19T17:30:00+02:00","kind":"launch","actor":{"id":"batisseur"},"title":"Page d'offre en ligne, après approbation du matin.","public_title":"met en ligne","status":"ok"}
+</script>
+<script>
+  // Langue, thème, encart étoile : la page est une maquette, rien ne part sur le réseau.
+  (function () {
+    var I18N = {
+      en: { maquette: 'Mockup · fictional data', nav_format: 'The format', nav_brancher: 'Plug in', nav_donnees: 'Your data', nav_depot: 'GitHub', jour: '☀ Day', nuit: '☾ Night',
+        eyebrow: 'Web component · open format · Apache 2.0', h1: 'Watch your agents <em>work.</em>',
+        sub: 'One aquarium for <b>any agent</b>: Claude Code, OpenTelemetry, AG-UI, Zelij Core, platform agents. An open event, a dependency-free component, a tiny collector. <b>Your data stays home.</b>',
+        cta1: 'Plug in with one line', cta2: 'Read the format', kpi_cout: "today's cost", kpi_attente: 'pending decisions', publique: 'public view', vitesse: 'speed', direct: 'Live',
+        legende: '<b>Simulated day.</b> In your installation, every card is a real Wakil Event emitted by your own agents. Gold is the human: nothing that commits happens before their decision. The dashed visitor is an external agent, a shopping agent for instance, anonymous by default. The "public view" box shows what a shared page would display: public titles only.',
+        b_titre: 'Plug in with one line.', b_lead: 'The collector receives events, stores them, serves them to the component. Adapters translate what you already have.',
+        a1: 'One line in settings.json', a1p: 'Session, tool and subagent hooks become Wakil Events. No file read, no secret.', a2: 'An OTLP receiver', a2p: 'LangChain, LlamaIndex, CrewAI, Vercel AI SDK: agent, tool and model spans, projected without copying prompts.',
+        a3: 'An event consumer', a3p: 'RUN, TOOL_CALL, TEXT_MESSAGE: the agent → UI protocol, staged.', a4: 'The two original platforms', a4p: 'The historical aquarium switches to the component, with no regression.',
+        a5k: 'Muse · dots connectors', a5: 'The visitors', a5p: 'A shopping agent reading your catalogue or asking for a quote appears at the entrance, anonymous. Unique on the market.', prevu: 'planned for lot 1',
+        f_titre: 'One event, one line.', f_lead: 'A Wakil Event says who did what, when, to whom, at what cost and in what state. What is private stays private: only the public title may leave.',
+        f_actor: 'The human is drawn in gold.', f_prive_k: 'private', f_prive: 'title, detail, attrs, cost: never on a public view. public_title or a generic label, nothing else.',
+        d_titre: 'Your data stays home.', d_lead: 'The collector runs on your machine or your server. It makes no outbound calls and executes nothing: it stores and it shows. The public page is a projection without detail, that you open and cut with one click.',
+        d_lead2: 'Apache 2.0 license: embed it in your products, open or closed. The brand and the hosted demo stay with zelij.ai.',
+        r_titre: 'Roadmap', r0: 'Name, format v0.1, mockup', r0s: 'what you are looking at', r1: 'Component, collector, demo, Claude Code adapter', r1s: 'public repository zelij-ai/wakilarium', r2: 'OpenTelemetry, AG-UI, connectors, Zelij Core and zelij-os switch', r2s: 'no regression, or no switch',
+        pied: 'agents propose, the human decides', e_titre: 'A star for Wakilarium', e_texte: 'Follow the releases and help the format become a standard.', e_bientot: 'soon' },
+      fr: {}
+    };
+    var FR = {};
+    document.querySelectorAll('[data-i18n],[data-i18n-html]').forEach(function (el) { var k = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-html'); FR[k] = el.hasAttribute('data-i18n-html') ? el.innerHTML : el.textContent; });
+    I18N.fr = FR; FR.nuit = '☾ Nuit';
+    function appliquer(lg) {
+      document.documentElement.setAttribute('lang', lg);
+      document.querySelectorAll('[data-i18n]').forEach(function (el) { var k = el.getAttribute('data-i18n'); if (I18N[lg][k] !== undefined) el.textContent = I18N[lg][k]; });
+      document.querySelectorAll('[data-i18n-html]').forEach(function (el) { var k = el.getAttribute('data-i18n-html'); if (I18N[lg][k] !== undefined) el.innerHTML = I18N[lg][k]; });
+      var b = document.querySelector('[data-lang]'); b.textContent = lg === 'en' ? 'FR' : 'EN'; b.setAttribute('data-lang', lg === 'en' ? 'fr' : 'en'); b.setAttribute('aria-pressed', String(lg === 'en'));
+      majTheme();
+    }
+    function majTheme() { var jour = document.documentElement.getAttribute('data-theme') === 'day', lg = document.documentElement.getAttribute('lang') || 'fr', b = document.querySelector('[data-theme-toggle]'); b.textContent = jour ? I18N[lg].nuit : I18N[lg].jour; b.setAttribute('aria-pressed', String(jour)); }
+    document.querySelector('[data-lang]').addEventListener('click', function () { appliquer(this.getAttribute('data-lang')); });
+    document.querySelector('[data-theme-toggle]').addEventListener('click', function () { var r = document.documentElement; r.setAttribute('data-theme', r.getAttribute('data-theme') === 'day' ? 'night' : 'day'); majTheme(); });
+    var encart = document.getElementById('etoile'); window.setTimeout(function () { encart.hidden = false; }, 1500);
+    encart.querySelector('[data-etoile-fermer]').addEventListener('click', function () { encart.hidden = true; });
+  })();
+</script>
+<script src="wakilarium.js" defer></script>
+</body>
+</html>
