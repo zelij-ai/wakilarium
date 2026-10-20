@@ -2,6 +2,10 @@
 
 **Français** · [English](#english)
 
+![La scène Wakilarium : l'humain en or, un agent par couloir, un visiteur à l'entrée ; une carte de dialogue et son lien nagent entre eux](docs/img/wakilarium.gif)
+
+*Journée simulée, personnages fictifs : c'est la maquette `demo/index.html`, thème nuit. [Image fixe en haute définition](docs/img/wakilarium-hero.png).*
+
 **Regardez vos agents travailler.** Wakilarium est un format d'événement ouvert, le *Wakil Event*, et un composant web sans dépendance qui met en scène n'importe quel agent d'IA : couloirs par métier, un anneau par agent, l'humain en or, les visiteurs en pointillé, les échanges et les décisions qui nagent sous vos yeux, en direct et en replay sur vingt-quatre heures. Une page publique montre la même scène sans aucun détail interne.
 
 « Wakil » (وكيل) est le mandataire, celui qui agit au nom d'un autre ; « -arium », le lieu où on l'observe.
@@ -41,6 +45,10 @@ Apache 2.0. Un projet de [zelij.ai](https://zelij.ai/), né de l'aquarium de [Ze
 ---
 
 ## English
+
+![The Wakilarium scene: the human in gold, one agent per lane, a visitor at the entrance; a dialogue card and its link swim between them](docs/img/wakilarium-scene.png)
+
+*Simulated day, fictional characters: this is the `demo/index.html` mockup, night theme.*
 
 **Watch your agents work.** Wakilarium is an open event format, the *Wakil Event*, and a dependency-free web component that stages any AI agent: lanes by job, one ring per agent, the human in gold, visitors dashed, exchanges and decisions swimming before your eyes, live and in replay over twenty-four hours. A public page shows the same scene without any internal detail.
 
