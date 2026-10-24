@@ -10,7 +10,27 @@
 
 « Wakil » (وكيل) est le mandataire, celui qui agit au nom d'un autre ; « -arium », le lieu où on l'observe.
 
-> État au 19/10/2026 : **lot 0**. Le format v0.1, son schéma et une maquette interactive sont publiés ici pour relecture. Le composant, le collecteur et les adaptateurs arrivent au lot 1. Rien n'est encore installable.
+> État au 25/10/2026 : **lot 1, première livraison**. Le collecteur local, le hook Claude Code, le composant `<wakil-arium>`, la page publique et le badge sont installables (`npx wakilarium`). Restent au lot 1 : le replay partageable en vidéo, puis les adaptateurs OpenTelemetry / AG-UI au lot 2.
+
+## Essayer en une minute : vos propres agents
+
+```bash
+npx wakilarium
+```
+
+Le collecteur écoute sur `http://127.0.0.1:8798`, la page s'ouvre, et Wakilarium propose d'installer le hook Claude Code dans
+`~/.claude/settings.json` (une sauvegarde est faite à côté ; `--yes` pour accepter sans question, `--no-hooks` pour s'en passer).
+Dès la première commande de Claude Code, la session apparaît dans son couloir : chaque outil est une étincelle, chaque réponse
+une carte, chaque demande de l'humain un échange vers l'agent. Rien ne quitte la machine : les événements sont écrits dans
+`~/.wakilarium/events.ndjson`, l'adaptateur ne lit que les champs du hook, jamais vos fichiers.
+
+- `npx wakilarium demo` : la journée fictive, sans rien installer.
+- `npx wakilarium install-hooks` / `uninstall-hooks` : poser ou retirer le hook à la main.
+- Page publique `http://127.0.0.1:8798/public/<jeton>/` (titres publics seulement, sans coût ni détail) et badge SVG
+  `http://127.0.0.1:8798/badge.svg` pour un README ; `/export.wakil` exporte la journée en NDJSON.
+- Pour tout autre agent : `POST http://127.0.0.1:8798/events` avec des Wakil Events (tableau JSON ou NDJSON), `GET /state?hours=24`,
+  flux SSE sur `/stream`. Le composant seul : `<script type="module" src="/wakilarium.js"></script>` puis
+  `<wakil-arium src="/state" live theme="night" lang="fr"></wakil-arium>`.
 
 ## Voir la maquette
 
@@ -29,7 +49,7 @@ Dix natures d'événement (`run.start`, `run.end`, `tool`, `message`, `decision.
 | Lot | Contenu |
 |---|---|
 | 0 | nom, format v0.1, schéma, maquette (ce dépôt aujourd'hui) |
-| 1 | composant `<wakil-arium>` (Canvas 2D, ESM + IIFE, npm et CDN), collecteur `wakil-collect` (Python : `POST /events`, suivi de fichier, OTLP/HTTP, SQLite, `GET /state`, page publique par jeton, `demo`), adaptateur hooks Claude Code, démo hébergée |
+| 1 | **livré le 25/10** : composant `<wakil-arium>` (Canvas 2D, ESM, zéro dépendance), collecteur local en Node (`POST /events`, NDJSON sur disque, `GET /state`, `/stream` SSE, page publique par jeton, badge SVG, export), adaptateur hooks Claude Code, `npx wakilarium` ; **à venir** : replay partagé en vidéo, publication npm, démo hébergée |
 | 2 | adaptateurs OpenTelemetry GenAI / OpenInference, AG-UI, connecteurs d'agents d'achat ; bascule des aquariums de Zelij Core et de la plateforme de l'éditeur, sans régression |
 
 Les tables de correspondance (Claude Code, OpenTelemetry, AG-UI, Zelij Core…) sont déjà dans la spécification : les relectures et contributions d'adaptateurs sont bienvenues avant le code.
