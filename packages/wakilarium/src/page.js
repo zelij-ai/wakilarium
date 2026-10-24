@@ -22,13 +22,16 @@ document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('clic
 document.querySelector('[data-theme-toggle]').addEventListener('click', () => { theme = theme === 'day' ? 'night' : 'day'; appliquer(); });
 appliquer();
 
-fetch('/jeton').then((r) => r.json()).then((j) => {
+if (!location.pathname.startsWith('/public/')) fetch('/jeton').then((r) => r.json()).then((j) => {
   const a = document.querySelector('[data-public-link]'); a.href = j.public_url + '/'; a.textContent = location.origin + j.public_url + '/';
   const code = document.querySelector('[data-i18n="cmd"] code'); code.textContent = `![Wakilarium](${location.origin}${j.badge_url})`;
 }).catch(() => {});
 
-// Page publique : le composant lit l'état public et masque le coût
-if (location.pathname.startsWith('/public/')) {
-  const base = location.pathname.replace(/\/(page)?\/?$/, '');
-  scene.setAttribute('src', `${base}/state`); scene.setAttribute('public', ''); scene.removeAttribute('live'); scene.removeAttribute('stream');
-}
+// Privé (racine) : état complet et flux en direct. Public (/public/<jeton>/) : état public, flux public, coût masqué ;
+// la page publique ne demande jamais /state.
+const publique = location.pathname.startsWith('/public/');
+const base = publique ? location.pathname.replace(/\/(page)?\/?$/, '') : '';
+if (publique) { scene.setAttribute('public', ''); document.querySelector('[data-badge]').href = `${base}/badge.svg`; document.querySelector('[data-export]').href = `${base}/export.wakil`; }
+scene.setAttribute('stream', `${base}/stream`);
+scene.setAttribute('live', '');
+scene.setAttribute('src', `${base}/state`);

@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomBytes } from 'node:crypto';
 import { Magasin, etat, PAR_APPEL_MAX } from './magasin.js';
-import { etatPublic } from './public.js';
+import { etatPublic, evenementPublic } from './public.js';
 import { badgeSvg } from './badge.js';
 
 const ICI = dirname(fileURLToPath(import.meta.url));
@@ -57,8 +57,13 @@ export function creerServeur(options = {}) {
   const statique = options.statique || ICI;
   const jeton = options.jeton || jetonPublic(dossier);
   const lang = options.lang || 'fr';
-  const flux = new Set();
-  magasin.abonner((nouveaux) => { const ligne = `data: ${JSON.stringify(nouveaux)}\n\n`; for (const res of flux) { try { res.write(ligne); } catch { flux.delete(res); } } });
+  const flux = new Set(), fluxPublic = new Set();
+  magasin.abonner((nouveaux) => {
+    const ligne = `data: ${JSON.stringify(nouveaux)}\n\n`;
+    for (const res of flux) { try { res.write(ligne); } catch { flux.delete(res); } }
+    const publics = nouveaux.map((e) => evenementPublic(e, lang)).filter(Boolean);
+    if (publics.length) { const lp = `data: ${JSON.stringify(publics)}\n\n`; for (const res of fluxPublic) { try { res.write(lp); } catch { fluxPublic.delete(res); } } }
+  });
 
   const serveur = createServer(async (req, res) => {
     const url = new URL(req.url, 'http://127.0.0.1');
@@ -79,6 +84,10 @@ export function creerServeur(options = {}) {
         res.write(': wakilarium\n\n'); flux.add(res); req.on('close', () => flux.delete(res)); return;
       }
       if (chemin === `/public/${jeton}` || chemin === `/public/${jeton}/state`) return json(res, 200, etatPublic(etat(magasin, url.searchParams.get('hours') || 24), lang));
+      if (chemin === `/public/${jeton}/stream`) {
+        res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-store', connection: 'keep-alive' });
+        res.write(': wakilarium public\n\n'); fluxPublic.add(res); req.on('close', () => fluxPublic.delete(res)); return;
+      }
       if (chemin === `/public/${jeton}/export.wakil` || chemin === '/export.wakil') {
         const publique = chemin !== '/export.wakil';
         const e = publique ? etatPublic(etat(magasin, 24 * 7), lang).events : etat(magasin, 24 * 7).events;
