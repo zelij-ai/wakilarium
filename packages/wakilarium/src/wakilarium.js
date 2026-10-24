@@ -43,6 +43,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px s
 .pause { border-color: color-mix(in srgb, var(--wk-gold) 60%, transparent); background: color-mix(in srgb, var(--wk-gold) 14%, transparent); }
 canvas { display: block; width: 100%; height: 560px; border-radius: 16px; }
 .vide { position: absolute; inset: 70px 0 0; display: grid; place-items: center; color: var(--wk-doux); font-size: 15px; pointer-events: none; }
+.vide[hidden] { display: none; }
 @media (max-width: 700px) { .tete input[type=range] { width: 100px; } .tete .horloge { font-size: 18px; } }
 `;
 
