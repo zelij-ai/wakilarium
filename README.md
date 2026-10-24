@@ -1,6 +1,6 @@
 # Wakilarium
 
-**Français** · [English](#english)
+[English](README.en.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Türkçe](README.tr.md) · [Русский](README.ru.md) · [Tiếng Việt](README.vi.md) · [ไทย](README.th.md) · [Deutsch](README.de.md) · [Español](README.es.md) · **Français** · [Українська](README.uk.md) · [Polski](README.pl.md) · [Português (Brasil)](README.pt-BR.md) · [العربية](README.ar.md) · [فارسی](README.fa.md) · [Bahasa Indonesia](README.id.md) · [Italiano](README.it.md) · [Ελληνικά](README.el.md) · [മലയാളം](README.ml.md) · [Roman Urdu](README.ur.md) · [Română](README.ro.md)
 
 ![La scène Wakilarium : l'humain en or, un agent par couloir, un visiteur à l'entrée ; une carte de dialogue et son lien nagent entre eux](docs/img/wakilarium.gif)
 
@@ -41,27 +41,3 @@ Copier le contenu d'un prompt ou d'une réponse ; afficher un détail privé sur
 ## Licence
 
 Apache 2.0. Un projet de [zelij.ai](https://zelij.ai/), né de l'aquarium de [Zelij Core](https://github.com/zelij-ai/zelij-core).
-
----
-
-## English
-
-![The Wakilarium scene: the human in gold, one agent per lane, a visitor at the entrance; a dialogue card and its link swim between them](docs/img/wakilarium-scene.png)
-
-*Simulated day, fictional characters: this is the `demo/index.html` mockup, night theme.*
-
-**Watch your agents work.** Wakilarium is an open event format, the *Wakil Event*, and a dependency-free web component that stages any AI agent: lanes by job, one ring per agent, the human in gold, visitors dashed, exchanges and decisions swimming before your eyes, live and in replay over twenty-four hours. A public page shows the same scene without any internal detail.
-
-*Wakil* (وكيل) is the mandatary, the one who acts on someone's behalf; *-arium*, the place where you watch it.
-
-> Status on 2026-10-19: **lot 0**. The v0.1 format, its schema and an interactive mockup are published here for review. The component, the collector and the adapters come with lot 1. Nothing is installable yet.
-
-**See the mockup**: open `demo/index.html` in a browser (or serve the `demo/` folder). A fictional day replays: clock, speed, timeline, today's cost, pending decisions, a "public view" switch, night and day themes, French and English. No network request: everything is in the page.
-
-**The format**: ten event kinds, an actor with its lane, and one rule: what is private stays private. `title`, `detail`, `attrs` and `cost` never reach a public view; only `public_title` (or a generic label) may be shown. Full specification: [`docs/wakil-event-v0.1.md`](docs/wakil-event-v0.1.md) (French; English translation planned for lot 1) · schema: [`schema/wakil-event-0.1.schema.json`](schema/wakil-event-0.1.schema.json).
-
-**Roadmap**: lot 1 ships the `<wakil-arium>` component (Canvas 2D, ESM + IIFE, npm and CDN), the `wakil-collect` collector (Python: `POST /events`, file tail, OTLP/HTTP, SQLite, `GET /state`, public page by token, `demo`), a Claude Code hooks adapter and a hosted demo; lot 2 adds OpenTelemetry GenAI / OpenInference, AG-UI and shopping-agent connectors, and switches the Zelij Core aquarium to the component with no regression.
-
-**What Wakilarium will never do**: copy a prompt or a model answer; show a private detail on a public page; call a private address from a received event; execute anything. It stores and it shows.
-
-**License**: Apache 2.0. A [zelij.ai](https://zelij.ai/) project, born from the [Zelij Core](https://github.com/zelij-ai/zelij-core) aquarium.
