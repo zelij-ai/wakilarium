@@ -1,0 +1,17 @@
+{
+  "name": "wakilarium",
+  "version": "0.1.0",
+  "description": "Watch your agents work: a local collector, a Claude Code hook and a web component that stage any AI agent (Wakil Event format).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": { "wakilarium": "bin/wakilarium.js" },
+  "main": "src/wakilarium.js",
+  "exports": { ".": "./src/wakilarium.js", "./collecteur": "./src/collecteur.js", "./hooks": "./src/hooks.js" },
+  "files": ["bin", "src", "README.md"],
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node --test", "start": "node bin/wakilarium.js" },
+  "keywords": ["agents", "observability", "claude-code", "visualization", "aquarium", "wakil-event", "opentelemetry"],
+  "repository": { "type": "git", "url": "https://github.com/zelij-ai/wakilarium" },
+  "homepage": "https://github.com/zelij-ai/wakilarium",
+  "author": "zelij.ai"
+}

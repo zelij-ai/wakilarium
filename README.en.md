@@ -10,7 +10,27 @@
 
 *Wakil* (وكيل) is the mandatary, the one who acts on someone's behalf; *-arium*, the place where you watch it.
 
-> Status on 2026-10-19: **lot 0**. The v0.1 format, its schema and an interactive mockup are published here for review. The component, the collector and the adapters come with lot 1. Nothing is installable yet.
+> Status on 2026-10-25: **lot 1, first delivery**. The local collector, the Claude Code hook, the `<wakil-arium>` component, the public page and the badge are installable (`npx wakilarium`). Still in lot 1: the shareable video replay; then the OpenTelemetry / AG-UI adapters in lot 2.
+
+## Try it in one minute: your own agents
+
+```bash
+npx wakilarium
+```
+
+The collector listens on `http://127.0.0.1:8798`, the page opens, and Wakilarium offers to install the Claude Code hook in
+`~/.claude/settings.json` (a backup is kept next to it; `--yes` to accept without asking, `--no-hooks` to skip). From the first
+Claude Code command, the session appears in its lane: every tool is a spark, every answer a card, every human request an
+exchange towards the agent. Nothing leaves the machine: events are written to `~/.wakilarium/events.ndjson`, and the adapter only
+reads the hook's fields, never your files.
+
+- `npx wakilarium demo`: the fictional day, nothing installed.
+- `npx wakilarium install-hooks` / `uninstall-hooks`: add or remove the hook by hand.
+- Public page `http://127.0.0.1:8798/public/<token>/` (public titles only, no cost, no detail) and an SVG badge at
+  `http://127.0.0.1:8798/badge.svg` for a README; `/export.wakil` exports the day as NDJSON.
+- Any other agent: `POST http://127.0.0.1:8798/events` with Wakil Events (JSON array or NDJSON), `GET /state?hours=24`, SSE on
+  `/stream`. The component alone: `<script type="module" src="/wakilarium.js"></script>` then
+  `<wakil-arium src="/state" live theme="night" lang="en"></wakil-arium>`.
 
 ## See the mockup
 
@@ -29,7 +49,7 @@ Ten event kinds (`run.start`, `run.end`, `tool`, `message`, `decision.open`, `de
 | Lot | Content |
 |---|---|
 | 0 | name, v0.1 format, schema, mockup (this repository today) |
-| 1 | `<wakil-arium>` component (Canvas 2D, ESM + IIFE, npm and CDN), `wakil-collect` collector (Python: `POST /events`, file tail, OTLP/HTTP, SQLite, `GET /state`, public page by token, `demo`), Claude Code hooks adapter, hosted demo |
+| 1 | **shipped 2026-10-25**: `<wakil-arium>` component (Canvas 2D, ESM, zero dependency), local collector in Node (`POST /events`, NDJSON on disk, `GET /state`, SSE `/stream`, public page by token, SVG badge, export), Claude Code hooks adapter, `npx wakilarium`; **next**: shared video replay, npm publication, hosted demo |
 | 2 | OpenTelemetry GenAI / OpenInference, AG-UI and shopping-agent adapters; switching the aquariums of Zelij Core and of the publisher's platform to the component, with no regression |
 
 The mapping tables (Claude Code, OpenTelemetry, AG-UI, Zelij Core…) are already in the specification: reviews and adapter contributions are welcome before the code.
