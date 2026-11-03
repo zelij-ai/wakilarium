@@ -1,5 +1,17 @@
 # Journal des versions
 
+## 0.1.1 — 2026-11-04
+
+- Composant : la scène devient une eau vivante. Caustiques précalculées qui ondulent au fond, trois rayons tombés de la surface
+  qui balancent, plancton en parallaxe, nappe de couleur au pied de chaque couloir ; les agents sont des orbes de verre éclairés
+  de l'intérieur qui respirent, halo d'eau autour d'eux, ondes et satellites pendant le travail, bulles à chaque outil ; l'humain
+  porte une couronne de rayons ; les fils coulent dans le sens de l'envoi avec une comète à traîne ; les cartes sont des plaques
+  de verre avec ombre portée et liseré. Sous « moins de mouvement », la scène est fixe mais garde sa profondeur. En pause, la
+  scène se fige (cartes et fils ne s'éteignent plus).
+- Démo : `demo/index.html` utilise le composant du paquet (plus de second code de dessin, `demo/wakilarium.js` retiré) ; le
+  thème et la langue de la page sont relayés au composant.
+- README : image fixe, scène et GIF recapturés.
+
 ## 0.1.0 — 2026-10-25 (lot 1, première livraison)
 
 - `packages/wakilarium` : paquet npm `wakilarium` (Node ≥ 18, zéro dépendance). `npx wakilarium` démarre le collecteur local

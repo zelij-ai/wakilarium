@@ -51,7 +51,7 @@
   .tete select { background: transparent; color: var(--wk-ink); border: 1px solid var(--wk-line); border-radius: 8px; padding: 4px 6px; font: inherit; font-size: 12px; }
   .tete input[type=range] { width: 140px; }
   .pause { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--wk-gold) 60%, transparent); background: color-mix(in srgb, var(--wk-gold) 14%, transparent); color: var(--wk-ink); font: 600 13px/1 var(--font); cursor: pointer; }
-  #wakilarium canvas { display: block; width: 100%; height: 560px; border-radius: 18px; background: var(--wk-bg-2); }
+  #wakilarium { display: block; margin-top: 22px; }
   .legende { margin: 12px 4px 0; color: var(--wk-doux); font-size: 14px; max-width: 80ch; }
   .legende b { color: var(--wk-ink); }
   section.bloc { padding: 56px 0 8px; }
@@ -81,7 +81,7 @@
   .etoile-texte { margin: 0 0 10px; font-size: 13px; color: var(--wk-doux); }
   .etoile-bouton { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 10px 6px 12px; border: 1px solid var(--wk-line); border-radius: 9px; text-decoration: none; font-size: 13px; font-weight: 600; }
   .etoile-compte { padding-left: 8px; border-left: 1px solid var(--wk-line); color: var(--wk-gold); font-family: var(--mono); font-size: 12px; }
-  @media (max-width: 760px) { .deux { grid-template-columns: 1fr; } #wakilarium canvas { height: 540px; } .tete input[type=range] { width: 100px; } }
+  @media (max-width: 760px) { .deux { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -109,22 +109,7 @@
     <a class="btn" href="#format" data-i18n="cta2">Lire le format</a>
   </div>
 
-  <div class="vitre" id="wakilarium">
-    <div class="tete">
-      <span class="nom">Wakilarium</span>
-      <span class="horloge" data-wk-clock>09:00</span>
-      <span class="etat" data-wk-state>Replay</span>
-      <span class="kpi"><span data-i18n="kpi_cout">coût du jour</span> <b data-wk-cost>0.00 €</b> · <span data-i18n="kpi_attente">décisions en attente</span> <b data-wk-pending>0</b></span>
-      <div class="droite">
-        <label><input type="checkbox" data-wk-public> <span data-i18n="publique">vue publique</span></label>
-        <label><span data-i18n="vitesse">vitesse</span> <select data-wk-speed><option value="60">×60</option><option value="180" selected>×180</option><option value="600">×600</option></select></label>
-        <input type="range" min="0" max="1000" value="0" data-wk-time aria-label="Ligne de temps">
-        <button type="button" class="pill-btn" data-wk-live data-i18n="direct">Direct</button>
-        <button type="button" class="pause" data-wk-pause aria-pressed="false">❚❚ Pause</button>
-      </div>
-    </div>
-    <canvas role="img" aria-label="Scène Wakilarium : un humain en or, des agents par couloir, un visiteur à l'entrée ; les cartes montrent les échanges, les décisions et les mises en ligne d'une journée simulée."></canvas>
-  </div>
+  <wakil-arium id="wakilarium" theme="night" lang="fr" speed="180"></wakil-arium>
   <p class="legende" data-i18n-html="legende"><b>Journée simulée.</b> Dans votre installation, chaque carte est un Wakil Event réel, émis par vos propres agents. L'or, c'est l'humain : rien de ce qui engage ne se fait avant sa décision. Le visiteur en pointillé est un agent extérieur, un agent d'achat par exemple, anonyme par défaut. La case « vue publique » montre ce qu'une page partagée afficherait : les titres publics seulement.</p>
 </header>
 
@@ -253,6 +238,14 @@
     encart.querySelector('[data-etoile-fermer]').addEventListener('click', function () { encart.hidden = true; });
   })();
 </script>
-<script src="wakilarium.js" defer></script>
+<script type="module">
+  import '../packages/wakilarium/src/wakilarium.js';
+  const el = document.getElementById('wakilarium');
+  const lignes = document.getElementById('wakil-events').textContent.split('\n').map((l) => l.trim()).filter(Boolean);
+  el.setEvents(lignes.map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean));
+  // la maquette suit la page : thème et langue sont des attributs du composant
+  new MutationObserver(() => { el.setAttribute('theme', document.documentElement.getAttribute('data-theme') === 'day' ? 'day' : 'night'); el.setAttribute('lang', document.documentElement.getAttribute('lang') || 'fr'); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'lang'] });
+</script>
 </body>
 </html>

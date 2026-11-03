@@ -1,6 +1,6 @@
 {
   "name": "wakilarium",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Watch your agents work: a local collector, a Claude Code hook and a web component that stage any AI agent (Wakil Event format).",
   "license": "Apache-2.0",
   "type": "module",
