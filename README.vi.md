@@ -4,7 +4,7 @@
 
 ![Khung cảnh Wakilarium: con người màu vàng, mỗi làn một tác nhân, một khách ghé thăm ở lối vào; một thẻ hội thoại và đường nối của nó bơi giữa họ](docs/img/wakilarium.gif)
 
-*Một ngày mô phỏng, nhân vật hư cấu: đây là bản mẫu `demo/index.html`, chủ đề ban đêm. [Ảnh tĩnh độ phân giải cao](docs/img/wakilarium-hero.png).*
+*Một ngày mô phỏng, nhân vật hư cấu: đây là bản mẫu `index.html`, chủ đề ban đêm. [Ảnh tĩnh độ phân giải cao](docs/img/wakilarium-hero.png).*
 
 **Hãy xem các tác nhân của bạn làm việc.** Wakilarium là một định dạng sự kiện mở, *Wakil Event*, và một web component không phụ thuộc, đưa bất kỳ tác nhân AI nào lên sân khấu: làn theo nghề, mỗi tác nhân một vòng, con người màu vàng, khách ghé thăm nét đứt, các trao đổi và quyết định bơi trước mắt bạn, trực tiếp và phát lại trong hai mươi bốn giờ. Một trang công khai cho thấy cùng khung cảnh mà không có bất kỳ chi tiết nội bộ nào.
 
@@ -14,7 +14,7 @@
 
 ## Xem bản mẫu
 
-Mở `demo/index.html` trong trình duyệt (hoặc phục vụ thư mục `demo/`). Một ngày hư cấu được phát lại: đồng hồ, tốc độ, dòng thời gian, chi phí trong ngày, các quyết định đang chờ, nút « chế độ công khai », chủ đề đêm và ngày, tiếng Pháp và tiếng Anh. Không có yêu cầu mạng nào: mọi thứ nằm trong trang.
+Mở `index.html` trong trình duyệt (hoặc phục vụ thư mục `demo/`). Một ngày hư cấu được phát lại: đồng hồ, tốc độ, dòng thời gian, chi phí trong ngày, các quyết định đang chờ, nút « chế độ công khai », chủ đề đêm và ngày, tiếng Pháp và tiếng Anh. Không có yêu cầu mạng nào: mọi thứ nằm trong trang.
 
 ## Định dạng trong một dòng
 

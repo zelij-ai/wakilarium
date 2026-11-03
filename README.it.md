@@ -4,7 +4,7 @@
 
 ![La scena Wakilarium: l'umano in oro, un agente per corsia, un visitatore all'ingresso; una scheda di dialogo e il suo legame nuotano tra loro](docs/img/wakilarium.gif)
 
-*Giornata simulata, personaggi di fantasia: è il mockup `demo/index.html`, tema notte. [Immagine fissa in alta definizione](docs/img/wakilarium-hero.png).*
+*Giornata simulata, personaggi di fantasia: è il mockup `index.html`, tema notte. [Immagine fissa in alta definizione](docs/img/wakilarium-hero.png).*
 
 **Guarda i tuoi agenti lavorare.** Wakilarium è un formato di evento aperto, il *Wakil Event*, e un componente web senza dipendenze che mette in scena qualsiasi agente IA: corsie per mestiere, un anello per agente, l'umano in oro, i visitatori tratteggiati, gli scambi e le decisioni che nuotano sotto i tuoi occhi, in diretta e in replay su ventiquattro ore. Una pagina pubblica mostra la stessa scena senza alcun dettaglio interno.
 
@@ -14,7 +14,7 @@
 
 ## Vedere il mockup
 
-Apri `demo/index.html` in un browser (o servi la cartella `demo/`). Una giornata di fantasia viene riprodotta: orologio, velocità, linea del tempo, costo del giorno, decisioni in attesa, interruttore «vista pubblica», temi notte e giorno, francese e inglese. Nessuna richiesta di rete: è tutto nella pagina.
+Apri `index.html` in un browser (o servi la cartella `demo/`). Una giornata di fantasia viene riprodotta: orologio, velocità, linea del tempo, costo del giorno, decisioni in attesa, interruttore «vista pubblica», temi notte e giorno, francese e inglese. Nessuna richiesta di rete: è tutto nella pagina.
 
 ## Il formato in una riga
 

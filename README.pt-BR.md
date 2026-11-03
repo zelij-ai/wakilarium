@@ -4,7 +4,7 @@
 
 ![A cena Wakilarium: o humano em dourado, um agente por raia, um visitante na entrada; um cartão de diálogo e seu vínculo nadam entre eles](docs/img/wakilarium.gif)
 
-*Dia simulado, personagens fictícios: é a maquete `demo/index.html`, tema noite. [Imagem fixa em alta definição](docs/img/wakilarium-hero.png).*
+*Dia simulado, personagens fictícios: é a maquete `index.html`, tema noite. [Imagem fixa em alta definição](docs/img/wakilarium-hero.png).*
 
 **Veja seus agentes trabalhando.** Wakilarium é um formato de evento aberto, o *Wakil Event*, e um componente web sem dependências que põe em cena qualquer agente de IA: raias por função, um anel por agente, o humano em dourado, os visitantes pontilhados, as trocas e as decisões nadando diante dos seus olhos, ao vivo e em replay de vinte e quatro horas. Uma página pública mostra a mesma cena sem nenhum detalhe interno.
 
@@ -14,7 +14,7 @@
 
 ## Ver a maquete
 
-Abra `demo/index.html` em um navegador (ou sirva a pasta `demo/`). Um dia fictício é reproduzido: relógio, velocidade, linha do tempo, custo do dia, decisões pendentes, chave "visão pública", temas noite e dia, francês e inglês. Nenhuma requisição de rede: tudo está na página.
+Abra `index.html` em um navegador (ou sirva a pasta `demo/`). Um dia fictício é reproduzido: relógio, velocidade, linha do tempo, custo do dia, decisões pendentes, chave "visão pública", temas noite e dia, francês e inglês. Nenhuma requisição de rede: tudo está na página.
 
 ## O formato em uma linha
 

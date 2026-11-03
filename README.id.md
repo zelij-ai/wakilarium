@@ -4,7 +4,7 @@
 
 ![Adegan Wakilarium: manusia berwarna emas, satu agen per jalur, seorang pengunjung di pintu masuk; sebuah kartu dialog dan tautannya berenang di antara mereka](docs/img/wakilarium.gif)
 
-*Hari simulasi, tokoh fiktif: ini adalah mockup `demo/index.html`, tema malam. [Gambar diam resolusi tinggi](docs/img/wakilarium-hero.png).*
+*Hari simulasi, tokoh fiktif: ini adalah mockup `index.html`, tema malam. [Gambar diam resolusi tinggi](docs/img/wakilarium-hero.png).*
 
 **Saksikan agen Anda bekerja.** Wakilarium adalah format peristiwa terbuka, *Wakil Event*, dan komponen web tanpa dependensi yang memanggungkan agen AI apa pun: jalur menurut pekerjaan, satu cincin per agen, manusia berwarna emas, pengunjung bergaris putus-putus, pertukaran dan keputusan yang berenang di depan mata Anda, langsung dan dalam putar ulang selama dua puluh empat jam. Halaman publik menampilkan adegan yang sama tanpa satu pun detail internal.
 
@@ -14,7 +14,7 @@
 
 ## Lihat mockup
 
-Buka `demo/index.html` di peramban (atau sajikan folder `demo/`). Satu hari fiktif diputar ulang: jam, kecepatan, garis waktu, biaya hari ini, keputusan tertunda, sakelar « tampilan publik », tema malam dan siang, bahasa Prancis dan Inggris. Tanpa permintaan jaringan: semuanya ada di dalam halaman.
+Buka `index.html` di peramban (atau sajikan folder `demo/`). Satu hari fiktif diputar ulang: jam, kecepatan, garis waktu, biaya hari ini, keputusan tertunda, sakelar « tampilan publik », tema malam dan siang, bahasa Prancis dan Inggris. Tanpa permintaan jaringan: semuanya ada di dalam halaman.
 
 ## Format dalam satu baris
 

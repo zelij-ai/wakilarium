@@ -1,5 +1,10 @@
 # Journal des versions
 
+## 0.1.2 — à paraître
+
+- Démo en ligne sur wakilarium.zelij.ai : la page passe à la racine du dépôt (`index.html`, `demo/` redirige), textes au présent
+  (collecteur `npx wakilarium`, lot 1 livré), description et titre de la page. Aucun changement dans le paquet npm.
+
 ## 0.1.1 — 2026-11-04
 
 - Composant : la scène devient une eau vivante. Caustiques précalculées qui ondulent au fond, trois rayons tombés de la surface

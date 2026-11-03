@@ -4,7 +4,7 @@
 
 ![Scena Wakilarium: omul în auriu, un agent pe culoar, un vizitator la intrare; un card de dialog și legătura lui înoată între ei](docs/img/wakilarium.gif)
 
-*Zi simulată, personaje fictive: este macheta `demo/index.html`, tema de noapte. [Imagine fixă în înaltă definiție](docs/img/wakilarium-hero.png).*
+*Zi simulată, personaje fictive: este macheta `index.html`, tema de noapte. [Imagine fixă în înaltă definiție](docs/img/wakilarium-hero.png).*
 
 **Privește-ți agenții lucrând.** Wakilarium este un format de eveniment deschis, *Wakil Event*, și o componentă web fără dependențe care pune în scenă orice agent IA: culoare pe meserii, un inel per agent, omul în auriu, vizitatorii punctați, schimburile și deciziile care înoată sub ochii tăi, în direct și în redare pe douăzeci și patru de ore. O pagină publică arată aceeași scenă fără niciun detaliu intern.
 
@@ -14,7 +14,7 @@
 
 ## Vezi macheta
 
-Deschide `demo/index.html` într-un browser (sau servește dosarul `demo/`). O zi fictivă se redă: ceas, viteză, linie de timp, costul zilei, decizii în așteptare, comutator „vedere publică”, teme de noapte și de zi, franceză și engleză. Nicio cerere de rețea: totul este în pagină.
+Deschide `index.html` într-un browser (sau servește dosarul `demo/`). O zi fictivă se redă: ceas, viteză, linie de timp, costul zilei, decizii în așteptare, comutator „vedere publică”, teme de noapte și de zi, franceză și engleză. Nicio cerere de rețea: totul este în pagină.
 
 ## Formatul într-o linie
 

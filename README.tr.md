@@ -4,7 +4,7 @@
 
 ![Wakilarium sahnesi: altın rengindeki insan, her kulvarda bir ajan, girişte bir ziyaretçi; bir diyalog kartı ve bağlantısı aralarında yüzüyor](docs/img/wakilarium.gif)
 
-*Simüle edilmiş bir gün, kurgusal karakterler: bu, `demo/index.html` maketi, gece teması. [Yüksek çözünürlüklü sabit görsel](docs/img/wakilarium-hero.png).*
+*Simüle edilmiş bir gün, kurgusal karakterler: bu, `index.html` maketi, gece teması. [Yüksek çözünürlüklü sabit görsel](docs/img/wakilarium-hero.png).*
 
 **Ajanlarınızın çalışmasını izleyin.** Wakilarium, açık bir olay biçimi olan *Wakil Event* ve herhangi bir yapay zekâ ajanını sahneye koyan bağımlılıksız bir web bileşenidir: mesleğe göre kulvarlar, ajan başına bir halka, altın rengindeki insan, kesikli çizgili ziyaretçiler, gözlerinizin önünde yüzen alışverişler ve kararlar; canlı ve yirmi dört saat boyunca yeniden oynatılabilir. Herkese açık bir sayfa aynı sahneyi hiçbir iç ayrıntı olmadan gösterir.
 
@@ -14,7 +14,7 @@
 
 ## Maketi görün
 
-`demo/index.html` dosyasını bir tarayıcıda açın (ya da `demo/` klasörünü sunun). Kurgusal bir gün yeniden oynar: saat, hız, zaman çizgisi, günün maliyeti, bekleyen kararlar, «herkese açık görünüm» anahtarı, gece ve gündüz temaları, Fransızca ve İngilizce. Hiçbir ağ isteği yok: her şey sayfanın içinde.
+`index.html` dosyasını bir tarayıcıda açın (ya da `demo/` klasörünü sunun). Kurgusal bir gün yeniden oynar: saat, hız, zaman çizgisi, günün maliyeti, bekleyen kararlar, «herkese açık görünüm» anahtarı, gece ve gündüz temaları, Fransızca ve İngilizce. Hiçbir ağ isteği yok: her şey sayfanın içinde.
 
 ## Biçim tek satırda
 

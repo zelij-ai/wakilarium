@@ -4,7 +4,7 @@
 
 ![Wakilarium ka manzar: sunehre rang mein insaan, har lane mein ek agent, darwaze par ek visitor; ek guftagu card aur us ka rabta un ke darmiyan tairte hain](docs/img/wakilarium.gif)
 
-*Simulated din, farzi kirdar: yeh `demo/index.html` ka mockup hai, raat ka theme. [High definition still image](docs/img/wakilarium-hero.png).*
+*Simulated din, farzi kirdar: yeh `index.html` ka mockup hai, raat ka theme. [High definition still image](docs/img/wakilarium-hero.png).*
 
 **Apne agents ko kaam karte dekhein.** Wakilarium ek khula event format hai, *Wakil Event*, aur ek dependency-free web component jo kisi bhi AI agent ko stage par le aata hai: pesha ke mutabiq lanes, har agent ke liye ek ring, sunehre rang mein insaan, dotted visitors, aap ki aankhon ke saamne tairte hue tabadle aur faisle, live aur chaubees ghante ke replay mein. Ek awami page wahi manzar bina kisi andaruni tafseel ke dikhata hai.
 
@@ -14,7 +14,7 @@
 
 ## Mockup dekhein
 
-Browser mein `demo/index.html` kholein (ya `demo/` folder serve karein). Ek farzi din replay hota hai: ghari, raftaar, timeline, din ki laagat, intezar mein faisle, «awami view» ka switch, raat aur din ke themes, French aur English. Koi network request nahi: sab kuch page ke andar hai.
+Browser mein `index.html` kholein (ya `demo/` folder serve karein). Ek farzi din replay hota hai: ghari, raftaar, timeline, din ki laagat, intezar mein faisle, «awami view» ka switch, raat aur din ke themes, French aur English. Koi network request nahi: sab kuch page ke andar hai.
 
 ## Format ek line mein
 
