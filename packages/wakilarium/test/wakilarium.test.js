@@ -26,17 +26,21 @@ test('valider : obligatoires, énumérations, bornes, champs inconnus conservés
 });
 
 test('magasin : ajout, tri, fenêtre bornée, persistance NDJSON', () => {
+  // Dates relatives à maintenant : le rechargement depuis le disque ignore ce qui a plus de FENETRE_MAX_H (7 jours),
+  // des dates fixes périmaient le test (constat du 03/11).
+  const maintenant = Date.now();
+  const t9 = new Date(maintenant - 3 * 3600 * 1000).toISOString(), t11 = new Date(maintenant - 1 * 3600 * 1000).toISOString();
   const dossier = mkdtempSync(join(tmpdir(), 'wk-'));
   const m = new Magasin({ dossier });
-  const r = m.ajouter([ev({ ts: '2026-10-24T11:00:00Z' }), ev({ ts: '2026-10-24T09:00:00Z' }), { v: '0.1' }]);
+  const r = m.ajouter([ev({ ts: t11 }), ev({ ts: t9 }), { v: '0.1' }]);
   assert.equal(r.acceptes, 2); assert.equal(r.refuses.length, 1);
-  assert.deepEqual(m.evenements.map((e) => e.ts), ['2026-10-24T09:00:00Z', '2026-10-24T11:00:00Z']);
+  assert.deepEqual(m.evenements.map((e) => e.ts), [t9, t11]);
   assert.ok(existsSync(join(dossier, 'events.ndjson')) && readFileSync(join(dossier, 'events.ndjson'), 'utf8').split('\n').filter(Boolean).length === 2);
   const m2 = new Magasin({ dossier });                                   // rechargé depuis le disque
   assert.equal(m2.evenements.length, 2);
-  const f = m2.fenetre(1, Date.parse('2026-10-24T11:30:00Z'));
+  const f = m2.fenetre(1, maintenant - 30 * 60 * 1000);
   assert.equal(f.evenements.length, 1);
-  const s = etat(m2, 24, Date.parse('2026-10-24T12:00:00Z'));
+  const s = etat(m2, 24, maintenant);
   assert.deepEqual(s.lanes, ['marketing']); assert.equal(s.actors[0].name, 'Élise Tanguy'); assert.equal(s.events.length, 2);
 });
 
