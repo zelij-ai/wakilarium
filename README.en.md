@@ -4,7 +4,7 @@
 
 ![The Wakilarium scene: the human in gold, one agent per lane, a visitor at the entrance; a dialogue card and its link swim between them](docs/img/wakilarium.gif)
 
-*Simulated day, fictional characters: this is the `demo/index.html` mockup, night theme. [Still image in high definition](docs/img/wakilarium-hero.png).*
+*Simulated day, fictional characters: this is the `index.html` mockup, night theme. [Still image in high definition](docs/img/wakilarium-hero.png).*
 
 **Watch your agents work.** Wakilarium is an open event format, the *Wakil Event*, and a dependency-free web component that stages any AI agent: lanes by job, one ring per agent, the human in gold, visitors dashed, exchanges and decisions swimming before your eyes, live and in replay over twenty-four hours. A public page shows the same scene without any internal detail.
 
@@ -34,7 +34,7 @@ reads the hook's fields, never your files.
 
 ## See the mockup
 
-Open `demo/index.html` in a browser (or serve the `demo/` folder). A fictional day replays: clock, speed, timeline, today's cost, pending decisions, a "public view" switch, night and day themes, French and English. No network request: everything is in the page.
+The demo is online: **https://wakilarium.zelij.ai/**. Locally, open `index.html` in a browser (or serve the repository root). A fictional day replays: clock, speed, timeline, today's cost, pending decisions, a "public view" switch, night and day themes, French and English. No network request: everything is in the page.
 
 ## The format in one line
 

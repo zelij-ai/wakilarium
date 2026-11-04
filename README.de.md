@@ -4,7 +4,7 @@
 
 ![Die Wakilarium-Szene: der Mensch in Gold, ein Agent pro Bahn, ein Besucher am Eingang; eine Dialogkarte und ihre Verbindung schwimmen zwischen ihnen](docs/img/wakilarium.gif)
 
-*Simulierter Tag, fiktive Figuren: das ist der Entwurf `demo/index.html`, Nachtthema. [Standbild in hoher Auflösung](docs/img/wakilarium-hero.png).*
+*Simulierter Tag, fiktive Figuren: das ist der Entwurf `index.html`, Nachtthema. [Standbild in hoher Auflösung](docs/img/wakilarium-hero.png).*
 
 **Sehen Sie Ihren Agenten bei der Arbeit zu.** Wakilarium ist ein offenes Ereignisformat, das *Wakil Event*, und eine abhängigkeitsfreie Webkomponente, die jeden KI-Agenten in Szene setzt: Bahnen nach Beruf, ein Ring pro Agent, der Mensch in Gold, Besucher gepunktet, Austausch und Entscheidungen, die vor Ihren Augen schwimmen, live und als Wiedergabe über vierundzwanzig Stunden. Eine öffentliche Seite zeigt dieselbe Szene ohne jedes interne Detail.
 
@@ -14,7 +14,7 @@
 
 ## Den Entwurf ansehen
 
-Öffnen Sie `demo/index.html` in einem Browser (oder liefern Sie den Ordner `demo/` aus). Ein fiktiver Tag wird abgespielt: Uhr, Geschwindigkeit, Zeitleiste, Tageskosten, offene Entscheidungen, Schalter „öffentliche Ansicht“, Nacht- und Tagthema, Französisch und Englisch. Keine Netzwerkanfrage: alles steckt in der Seite.
+Öffnen Sie `index.html` in einem Browser (oder liefern Sie den Ordner `demo/` aus). Ein fiktiver Tag wird abgespielt: Uhr, Geschwindigkeit, Zeitleiste, Tageskosten, offene Entscheidungen, Schalter „öffentliche Ansicht“, Nacht- und Tagthema, Französisch und Englisch. Keine Netzwerkanfrage: alles steckt in der Seite.
 
 ## Das Format in einer Zeile
 
