@@ -46,8 +46,25 @@ export class Magasin {
     this.memoireMax = options.memoireMax || 20000;
     this.persister = options.persister !== false;
     this.evenements = [];
+    this.parId = new Map();      // id → événement : un événement renvoyé avec le même id met à jour le précédent (AG-UI, spec §6.3)
     this.abonnes = new Set();
     if (this.persister) this.charger();
+  }
+
+  /** Garde les `memoireMax` plus récents et l'index par id en phase. */
+  borner() {
+    if (this.evenements.length <= this.memoireMax) return;
+    const retires = this.evenements.splice(0, this.evenements.length - this.memoireMax);
+    for (const e of retires) if (this.parId.get(e.id) === e) this.parId.delete(e.id);
+  }
+
+  /** Place (ou remplace, à id égal) un événement validé ; rend true s'il remplaçait un ancien. */
+  placer(e) {
+    const ancien = this.parId.get(e.id);
+    if (ancien) { const i = this.evenements.indexOf(ancien); if (i !== -1) this.evenements.splice(i, 1); }
+    this.evenements.push(e);
+    this.parId.set(e.id, e);
+    return !!ancien;
   }
 
   charger() {
@@ -59,11 +76,11 @@ export class Magasin {
       if (!l.trim()) continue;
       try {
         const e = JSON.parse(l);
-        if (Date.parse(e.ts) >= depuis) { this.evenements.push(e); n++; }
+        if (e && e.id && Date.parse(e.ts) >= depuis) { this.placer(e); n++; }   // à id égal, la dernière ligne écrite l'emporte
       } catch { /* ligne abîmée : ignorée */ }
     }
     this.evenements.sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts));
-    if (this.evenements.length > this.memoireMax) this.evenements = this.evenements.slice(-this.memoireMax);
+    this.borner();
     return n;
   }
 
@@ -77,9 +94,9 @@ export class Magasin {
       acceptes.push(r.evenement);
     });
     if (acceptes.length) {
-      this.evenements.push(...acceptes);
+      for (const e of acceptes) this.placer(e);
       this.evenements.sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts));
-      if (this.evenements.length > this.memoireMax) this.evenements.splice(0, this.evenements.length - this.memoireMax);
+      this.borner();
       if (this.persister) {
         try { mkdirSync(this.dossier, { recursive: true }); appendFileSync(this.fichier, acceptes.map((e) => JSON.stringify(e)).join('\n') + '\n'); } catch { /* disque indisponible : la mémoire suffit */ }
       }
