@@ -1,9 +1,23 @@
 # Journal des versions
 
-## 0.1.2 — à paraître
+## 0.2.0 — à paraître (lot 2, première partie)
 
+- **Adaptateur OpenTelemetry GenAI / OpenInference** (`src/otel.js`, spec §6.2) : le collecteur reçoit les traces OTLP/HTTP en
+  JSON sur `POST /v1/traces` (`OTEL_EXPORTER_OTLP_PROTOCOL=http/json` ; le protobuf répond 415). `invoke_agent` → `run.start`
+  + `run.end`, `execute_tool` → `tool`, `chat` / `generate_content` / `text_completion` → jetons et modèle sur le coût de
+  l'exécution englobante, ou un `cost` isolé ; `gen_ai.provider.name` → `attrs.provider` ; `openinference.span.kind` reconnu.
+  Montants d'après une table de tarifs datée (06/11/2026), complétable dans `~/.wakilarium/tarifs.json` ; un modèle inconnu
+  n'est jamais chiffré. Aucun contenu de prompt ni de réponse copié.
+- **Adaptateur AG-UI** (`src/agui.js`, spec §6.3) : `POST /agui` reçoit le flux tel quel (SSE, NDJSON ou tableau), avec l'état
+  gardé entre les appels ; `npx wakilarium agui` lit le flux sur l'entrée standard (`curl -N … | npx wakilarium agui --agent
+  "Nom"`). Les messages sont assemblés de START à END, un appel d'outil est un seul `tool` mis à jour au résultat sous le même
+  identifiant, les étapes deviennent des `note`, les `STATE_*` et `MESSAGES_SNAPSHOT` sont ignorés, les arguments jamais copiés.
+- Magasin : un événement renvoyé avec le même `id` remplace le précédent, en mémoire comme au rechargement du NDJSON (la
+  dernière ligne écrite l'emporte).
+- Collecteur : `/jeton` indique les adresses `/v1/traces` et `/agui` ; la bannière de démarrage les affiche.
 - Démo en ligne sur wakilarium.zelij.ai : la page passe à la racine du dépôt (`index.html`, `demo/` redirige), textes au présent
-  (collecteur `npx wakilarium`, lot 1 livré), description et titre de la page. Aucun changement dans le paquet npm.
+  (collecteur `npx wakilarium`, lot 1 livré), description et titre de la page.
+- Tests : `test/adaptateurs.test.js` (traces, OpenInference, tarifs, flux AG-UI, mise à jour par identifiant, routes).
 
 ## 0.1.1 — 2026-11-04
 

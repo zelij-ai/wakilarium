@@ -65,6 +65,8 @@ Taille maximale d'un événement : 16 Ko. Les champs inconnus sont conservés et
 
 ## 6. Tables de correspondance (adaptateurs de la v1)
 
+État au 06/11/2026 : §6.1 (hooks Claude Code, `src/hooks.js`), §6.2 (OpenTelemetry GenAI / OpenInference, `src/otel.js`, récepteur `POST /v1/traces`) et §6.3 (AG-UI, `src/agui.js`, `POST /agui` et `wakilarium agui`) sont écrits dans le paquet ; §6.4 à §6.6 restent à écrire.
+
 ### 6.1 Hooks Claude Code / Agent SDK
 | Hook | Wakil Event |
 |---|---|

@@ -126,9 +126,10 @@
   <div class="deux" style="margin-top:18px">
     <pre><span class="d"># collecteur local, zéro dépendance (Node 18+)</span>
 <span class="c">npx</span> wakilarium                 <span class="d"># démarre sur 127.0.0.1:8798 et ouvre la page</span>
-<span class="c">npx</span> wakilarium hook install    <span class="d"># vos sessions Claude Code deviennent des Wakil Events</span></pre>
+<span class="c">npx</span> wakilarium install-hooks   <span class="d"># vos sessions Claude Code deviennent des Wakil Events</span>
+<span class="d"># OpenTelemetry GenAI : OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:8798/v1/traces · AG-UI : curl -N … | npx wakilarium agui</span></pre>
     <pre><span class="d">&lt;!-- composant, dans votre page --&gt;</span>
-&lt;script type=<span class="s">"module"</span> src=<span class="s">"https://cdn.jsdelivr.net/npm/wakilarium@0.1.1/src/wakilarium.js"</span>&gt;&lt;/script&gt;
+&lt;script type=<span class="s">"module"</span> src=<span class="s">"https://cdn.jsdelivr.net/npm/wakilarium@0.2.0/src/wakilarium.js"</span>&gt;&lt;/script&gt;
 &lt;wakil-arium src=<span class="s">"http://127.0.0.1:8798/state"</span> theme=<span class="s">"night"</span>&gt;&lt;/wakil-arium&gt;</pre>
   </div>
 </section>
@@ -159,8 +160,8 @@
       <h2 data-i18n="r_titre">Feuille de route</h2>
       <ol class="route">
         <li><span class="n">lot 0</span><div><b data-i18n="r0">Nom, format v0.1, maquette</b><span data-i18n="r0s">ce que vous regardez</span></div></li>
-        <li><span class="n">lot 1</span><div><b data-i18n="r1">Composant, collecteur, démo, adaptateur Claude Code</b><span data-i18n="r1s">livré : wakilarium 0.1.1, cette page</span></div></li>
-        <li><span class="n">lot 2</span><div><b data-i18n="r2">OpenTelemetry, AG-UI, connecteurs, bascule de Zelij Core et zelij-os</b><span data-i18n="r2s">sans régression, sinon pas de bascule</span></div></li>
+        <li><span class="n">lot 1</span><div><b data-i18n="r1">Composant, collecteur, démo, adaptateur Claude Code</b><span data-i18n="r1s">livré : collecteur, hook Claude Code, cette page</span></div></li>
+        <li><span class="n">lot 2</span><div><b data-i18n="r2">OpenTelemetry GenAI et AG-UI livrés ; connecteurs, bascule de Zelij Core et zelij-os</b><span data-i18n="r2s">adaptateurs livrés le 06/11 (wakilarium 0.2.0) ; la bascule sans régression, sinon pas de bascule</span></div></li>
       </ol>
     </div>
   </div>
@@ -216,7 +217,7 @@
         f_actor: 'The human is drawn in gold.', f_prive_k: 'private', f_prive: 'title, detail, attrs, cost: never on a public view. public_title or a generic label, nothing else.',
         d_titre: 'Your data stays home.', d_lead: 'The collector runs on your machine or your server. It makes no outbound calls and executes nothing: it stores and it shows. The public page is a projection without detail, that you open and cut with one click.',
         d_lead2: 'Apache 2.0 license: embed it in your products, open or closed. The brand and the hosted demo stay with zelij.ai.',
-        r_titre: 'Roadmap', r0: 'Name, format v0.1, mockup', r0s: 'what you are looking at', r1: 'Component, collector, demo, Claude Code adapter', r1s: 'shipped: wakilarium 0.1.1, this page', r2: 'OpenTelemetry, AG-UI, connectors, Zelij Core and zelij-os switch', r2s: 'no regression, or no switch',
+        r_titre: 'Roadmap', r0: 'Name, format v0.1, mockup', r0s: 'what you are looking at', r1: 'Component, collector, demo, Claude Code adapter', r1s: 'shipped: collector, Claude Code hook, this page', r2: 'OpenTelemetry GenAI and AG-UI shipped; connectors, Zelij Core and zelij-os switch', r2s: 'adapters shipped on 2026-11-06 (wakilarium 0.2.0); the switch with no regression, or no switch',
         pied: 'agents propose, the human decides', e_titre: 'A star for Wakilarium', e_texte: 'Follow the releases and help the format become a standard.', e_bientot: 'soon' },
       fr: {}
     };

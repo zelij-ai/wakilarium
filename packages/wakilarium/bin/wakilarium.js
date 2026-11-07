@@ -5,7 +5,8 @@
 //   wakilarium hook            (appelé par Claude Code) traduit un hook en Wakil Events et les envoie au collecteur
 //   wakilarium install-hooks   installe le hook dans ~/.claude/settings.json (sauvegarde à côté)
 //   wakilarium uninstall-hooks le retire
-//   options : --port 8798 --no-open --no-hooks --yes --lang fr|en --home <dossier>
+//   wakilarium agui            lit un flux AG-UI (SSE ou NDJSON) sur l'entrée standard et l'envoie au collecteur
+//   options : --port 8798 --no-open --no-hooks --yes --lang fr|en --home <dossier> --agent <nom> --lane <couloir>
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { createInterface } from 'node:readline';
@@ -13,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { creerServeur, chargerDemo } from '../src/collecteur.js';
 import { Magasin, dossierMaison } from '../src/magasin.js';
 import { traduire, envoyer, lireReglages, avecHooks, sansHooks, installes, ecrireReglages, fichierReglages } from '../src/hooks.js';
+import { TraducteurAgui, decoderFlux } from '../src/agui.js';
 
 const BINAIRE = resolve(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -30,6 +32,9 @@ const T = lang === 'fr' ? {
   installe: (f, s) => `Hook installé dans ${f}${s ? ` (sauvegarde : ${s})` : ''}. Chaque geste de Claude Code arrive maintenant dans l’aquarium.`,
   deja: 'Hook déjà installé.', retire: (f) => `Hook retiré de ${f}.`, absent: 'Aucun hook Wakilarium à retirer.',
   public: (u) => `Page publique (titres publics seulement) : ${u}`, badge: (u) => `Badge pour vos README : ${u}`,
+  otel: (u) => `Traces OpenTelemetry GenAI : OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=${u}v1/traces OTEL_EXPORTER_OTLP_PROTOCOL=http/json`,
+  agui: (u) => `Flux AG-UI : POST ${u}agui, ou « curl -N … | npx wakilarium agui »`,
+  aguiFin: (n, a) => `Flux AG-UI terminé : ${n} événements traduits, ${a} acceptés par le collecteur.`,
   sans: 'Sans hook, lancez plus tard : npx wakilarium install-hooks', fin: 'Ctrl+C pour arrêter ; les événements restent dans ~/.wakilarium.',
 } : {
   demarre: (u) => `Wakilarium is listening on ${u} — your agents show up at their first move.`,
@@ -38,6 +43,9 @@ const T = lang === 'fr' ? {
   installe: (f, s) => `Hook installed in ${f}${s ? ` (backup: ${s})` : ''}. Every Claude Code move now reaches the aquarium.`,
   deja: 'Hook already installed.', retire: (f) => `Hook removed from ${f}.`, absent: 'No Wakilarium hook to remove.',
   public: (u) => `Public page (public titles only): ${u}`, badge: (u) => `Badge for your READMEs: ${u}`,
+  otel: (u) => `OpenTelemetry GenAI traces: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=${u}v1/traces OTEL_EXPORTER_OTLP_PROTOCOL=http/json`,
+  agui: (u) => `AG-UI stream: POST ${u}agui, or “curl -N … | npx wakilarium agui”`,
+  aguiFin: (n, a) => `AG-UI stream over: ${n} events translated, ${a} accepted by the collector.`,
   sans: 'Without the hook, run later: npx wakilarium install-hooks', fin: 'Ctrl+C to stop; events stay in ~/.wakilarium.',
 };
 
@@ -67,6 +75,29 @@ async function hook() {
   process.exit(0);
 }
 
+async function agui() {
+  // `curl -N <agent> | wakilarium agui` : chaque ligne du flux (SSE ou NDJSON) est traduite et envoyée au collecteur local,
+  // par lots, sans attendre la fin du flux. Rien n'est appelé en dehors de 127.0.0.1.
+  const traducteur = new TraducteurAgui({ lang, agent: { ...(option('agent') ? { id: option('agent').toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: option('agent') } : {}), ...(option('lane') ? { lane: option('lane') } : {}) } });
+  const url = `http://127.0.0.1:${port}/events`;
+  let reste = '', traduits = 0, acceptes = 0;
+  const pousser = async (texte) => {
+    const evs = traducteur.traduireTout(decoderFlux(texte));
+    if (!evs.length) return;
+    traduits += evs.length;
+    if (await envoyer(evs, url)) acceptes += evs.length;
+  };
+  for await (const morceau of process.stdin) {
+    reste += morceau;
+    const coupe = reste.lastIndexOf('\n');
+    if (coupe === -1) continue;
+    const pret = reste.slice(0, coupe); reste = reste.slice(coupe + 1);
+    await pousser(pret);
+  }
+  if (reste.trim()) await pousser(reste);
+  console.log(T.aguiFin(traduits, acceptes));
+}
+
 function installer() {
   const fichier = fichierReglages();
   const reglages = lireReglages(fichier);
@@ -86,12 +117,14 @@ function desinstaller() {
 async function servir(demo) {
   const magasin = new Magasin({ dossier: demo ? undefined : dossierMaison(), persister: !demo });
   if (demo) chargerDemo(magasin);
-  const serveur = creerServeur({ magasin, lang });
+  const serveur = creerServeur({ magasin, lang, agent: option('agent') ? { id: option('agent').toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: option('agent') } : undefined });
   await new Promise((res, rej) => { serveur.once('error', rej); serveur.listen(port, '127.0.0.1', res); });
   const url = `http://127.0.0.1:${port}/`;
   console.log(demo ? T.demo(url) : T.demarre(url));
   console.log(T.public(`${url}public/${serveur.jeton}/`));
   console.log(T.badge(`${url}badge.svg`));
+  console.log(T.otel(url));
+  console.log(T.agui(url));
   if (!demo && !drapeau('no-hooks')) {
     const reglages = lireReglages(fichierReglages());
     if (installes(reglages)) console.log(T.deja);
@@ -106,6 +139,7 @@ try {
   if (commande === 'hook') await hook();
   else if (commande === 'install-hooks') installer();
   else if (commande === 'uninstall-hooks') desinstaller();
+  else if (commande === 'agui') await agui();
   else if (commande === 'demo') await servir(true);
   else if (commande === 'serve' || commande === 'start') await servir(false);
   else { console.error(`commande inconnue : ${commande}`); process.exit(2); }

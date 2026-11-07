@@ -8,6 +8,8 @@ import { randomBytes } from 'node:crypto';
 import { Magasin, etat, PAR_APPEL_MAX } from './magasin.js';
 import { etatPublic, evenementPublic } from './public.js';
 import { badgeSvg } from './badge.js';
+import { traduireTraces, tarifs } from './otel.js';
+import { TraducteurAgui } from './agui.js';
 
 const ICI = dirname(fileURLToPath(import.meta.url));
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json; charset=utf-8', '.ndjson': 'application/x-ndjson; charset=utf-8' };
@@ -49,7 +51,8 @@ export function decoder(texte) {
 const CSP = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'";
 
 /**
- * Crée le serveur. `options.magasin` injectable (tests) ; `options.statique` : dossier des fichiers servis (page, composant).
+ * Crée le serveur. `options.magasin` injectable (tests) ; `options.statique` : dossier des fichiers servis (page, composant) ;
+ * `options.tarifs` : table de tarifs des modèles (OpenTelemetry) ; `options.agent` : l'acteur mis en scène pour AG-UI.
  */
 export function creerServeur(options = {}) {
   const magasin = options.magasin || new Magasin({ dossier: options.dossier });
@@ -57,6 +60,8 @@ export function creerServeur(options = {}) {
   const statique = options.statique || ICI;
   const jeton = options.jeton || jetonPublic(dossier);
   const lang = options.lang || 'fr';
+  const table = options.tarifs || tarifs(dossier);
+  const agui = options.agui || new TraducteurAgui({ lang, agent: options.agent });
   const flux = new Set(), fluxPublic = new Set();
   magasin.abonner((nouveaux) => {
     const ligne = `data: ${JSON.stringify(nouveaux)}\n\n`;
@@ -76,6 +81,24 @@ export function creerServeur(options = {}) {
         if (liste.length > PAR_APPEL_MAX) return json(res, 413, { error: `au plus ${PAR_APPEL_MAX} événements par appel` });
         const r = magasin.ajouter(liste);
         return json(res, r.acceptes ? 202 : 422, { accepted: r.acceptes, rejected: r.refuses });
+      }
+      if (req.method === 'POST' && chemin === '/v1/traces') {
+        // Récepteur OTLP/HTTP en JSON (spec §5 et §6.2). Le protobuf n'est pas lu : l'exportateur se règle en http/json.
+        const type = String(req.headers['content-type'] || '');
+        if (!/json/i.test(type)) return json(res, 415, { error: 'OTLP/HTTP JSON attendu', hint: 'OTEL_EXPORTER_OTLP_PROTOCOL=http/json' });
+        let requete;
+        try { requete = JSON.parse(await lireCorps(req, 8 * 1024 * 1024) || '{}'); } catch (e) { return json(res, 400, { error: 'corps illisible', detail: String(e.message) }); }
+        const r = magasin.ajouter(traduireTraces(requete, { lang, tarifs: table }));
+        return json(res, 200, r.refuses.length ? { partialSuccess: { rejectedSpans: r.refuses.length, errorMessage: r.refuses[0].erreur } } : {});
+      }
+      if (req.method === 'POST' && chemin === '/agui') {
+        // Événements AG-UI (spec §6.3) : tableau JSON, NDJSON ou texte SSE, traduits avec l'état gardé entre les appels.
+        let texte;
+        try { texte = await lireCorps(req); } catch (e) { return json(res, 400, { error: 'corps illisible', detail: String(e.message) }); }
+        let evenements;
+        try { evenements = agui.traduireTout(texte); } catch (e) { return json(res, 400, { error: 'flux AG-UI illisible', detail: String(e.message) }); }
+        const r = magasin.ajouter(evenements);
+        return json(res, 202, { accepted: r.acceptes, rejected: r.refuses, translated: evenements.length });
       }
       if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'méthode' });
       if (chemin === '/state') return json(res, 200, etat(magasin, url.searchParams.get('hours') || 24));
@@ -99,7 +122,7 @@ export function creerServeur(options = {}) {
         return res.end(badgeSvg(etatPublic(etat(magasin, 24), lang), { theme: url.searchParams.get('theme') || 'night' }));
       }
       if (chemin === '/healthz') return json(res, 200, { ok: true, events: magasin.evenements.length });
-      if (chemin === '/jeton') return json(res, 200, { public_url: `/public/${jeton}`, badge_url: `/badge.svg` });
+      if (chemin === '/jeton') return json(res, 200, { public_url: `/public/${jeton}`, badge_url: `/badge.svg`, otlp_traces_url: '/v1/traces', agui_url: '/agui' });
       const fichiers = { '/': 'page.html', '/index.html': 'page.html', '/wakilarium.js': 'wakilarium.js', '/page.js': 'page.js', '/public.js': 'public.js' };
       if (chemin.startsWith('/public/') && (chemin.endsWith('/') || chemin === `/public/${jeton}/page`)) { fichiers[chemin] = 'page.html'; }
       const nom = fichiers[chemin];
@@ -117,6 +140,7 @@ export function creerServeur(options = {}) {
   });
   serveur.magasin = magasin;
   serveur.jeton = jeton;
+  serveur.agui = agui;
   return serveur;
 }
 
